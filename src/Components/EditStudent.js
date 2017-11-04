@@ -7,6 +7,7 @@ class EditStudent extends Component {
         super(props)
         this.state = {
             id: '',
+            matric: '',
             firstName: '',
             lastName: '',
             age: '',
@@ -19,9 +20,11 @@ class EditStudent extends Component {
     }
     getStudentDetails() {
         let studentId = this.props.match.params.id
-        axios.get(`http://schooled-res.herokuapp.com/api/students/${studentId}`).then(response => {
+        axios.get(`https://schooled-res.firebaseio.com/students/${studentId}.json`).then(response => {
+            console.log(response.data)
             this.setState({
-                id: response.data.id,
+                id: this.props.match.params.id,
+                matric: response.data.matric,
                 firstName: response.data.firstName,
                 lastName: response.data.lastName,
                 age: response.data.age,
@@ -34,9 +37,10 @@ class EditStudent extends Component {
         
     }
     editStudent(newStudent) {
+        let studentId = this.props.match.params.id
         axios.request({
             method: 'put',
-            url: `http://schooled-res.herokuapp.com/api/students/${this.state.id}`,
+            url: `https://schooled-res.firebaseio.com/students/${studentId}.json`,
             data: newStudent
         }).then(response => {
             this.props.history.push('/')
@@ -45,6 +49,7 @@ class EditStudent extends Component {
     handleSubmit(e) {
         e.preventDefault();
        const newStudent = {
+           matric: this.refs.matric.value,
            firstName: this.refs.firstName.value,
            lastName: this.refs.lastName.value,
            age: this.refs.age.value, 
@@ -69,6 +74,10 @@ class EditStudent extends Component {
                 <Link to="/" className="btn grey">Back</Link>
                 <h2>Edit Student</h2>
                 <form onSubmit={this.handleSubmit.bind(this)}>
+                    <div className="input-field">
+                        <input type="number" name="matric" ref="matric" value={this.state.matric} onChange={this.handleChange.bind(this)} />
+                        <label htmlFor="matric">First Name</label>
+                    </div>
                     <div className="input-field">
                         <input type="text" name="firstName" ref="firstName" value={this.state.firstName} onChange={this.handleChange.bind(this)} />
                         <label htmlFor="firstName">First Name</label>

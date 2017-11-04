@@ -13,11 +13,15 @@ class Students extends Component {
         this.getStudents();
     }
     getStudents() {
-        axios.get('http://schooled-res.herokuapp.com/api/students').then(response => {
+        axios.get('https://schooled-res.firebaseio.com/students.json').then(response => {
+            const studentsArray = []
+            for(let key in response.data) {
+                response.data[key].id = key
+                studentsArray.push(response.data[key])
+            }
+            console.log(response.data)
             this.setState({
-                students: response.data
-            }, () => {
-                //console.log(this.state)
+                students: studentsArray
             })
         })
         .catch(err => console.log(err))

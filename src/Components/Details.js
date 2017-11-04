@@ -6,7 +6,8 @@ class Details extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            details: ''
+            details: '',
+            id: ''
         }
     }
     componentWillMount() {
@@ -14,18 +15,19 @@ class Details extends Component {
     }
     getStudentDetails() {
         let studentId = this.props.match.params.id
-        axios.get(`http://localhost:3000/api/students/${studentId}`).then(response => {
+        axios.get(`https://schooled-res.firebaseio.com/students/${studentId}.json`).then(response => {
             this.setState({
-                details: response.data
+                details: response.data,
+                id: this.props.match.params.id
             }, () => {
-                console.log(this.state)
+                console.log(response.data)
             })
         })
         .catch(err => console.log(err))
     }
     onDelete() {
-        let studentId = this.state.details.id
-        axios.delete(`http://localhost:3000/api/students/${studentId}`)
+        let studentId = this.props.match.params.id
+        axios.delete(`https://schooled-res.firebaseio.com/students/${studentId}.json`)
             .then(response => {
                 this.props.history.push('/')
             }).catch(err => console.log(err))
@@ -38,10 +40,11 @@ class Details extends Component {
                 <Link to="/" className="btn grey">Back</Link>
                 <h3>{this.state.details.firstName} {this.state.details.lastName}</h3>
                 <ul className="collection">
+                    <li className="collection-item">Matriculation Number: {this.state.details.matric}</li>
                     <li className="collection-item">Age: {this.state.details.age}</li>
                     <li className="collection-item">Department: {this.state.details.department}</li>
                 </ul>
-                <Link to={`/students/edit/${this.state.details.id}`} className="btn">Edit</Link>
+                <Link to={`/students/edit/${this.state.id}`} className="btn">Edit</Link>
                 <button onClick={this.onDelete.bind(this)}className="btn red right">Delete</button>
             </div>
         )

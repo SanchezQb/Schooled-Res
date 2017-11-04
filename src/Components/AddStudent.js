@@ -6,7 +6,7 @@ class AddStudent extends Component {
     addNewStudent(newStudent) {
         axios.request({
             method: 'post',
-            url: 'http://schooled-res.herokuapp.com/api/students',
+            url: 'https://schooled-res.firebaseio.com/students.json',
             data: newStudent
         }).then(response => {
             this.props.history.push('/')
@@ -15,6 +15,7 @@ class AddStudent extends Component {
     handleSubmit(e) {
         e.preventDefault();
        const newStudent = {
+           matric: this.refs.matric.value,
            firstName: this.refs.firstName.value,
            lastName: this.refs.lastName.value,
            age: this.refs.age.value, 
@@ -30,6 +31,10 @@ class AddStudent extends Component {
                 <Link to="/" className="btn grey">Back</Link>
                 <h2>Add Student</h2>
                 <form onSubmit={this.handleSubmit.bind(this)}>
+                    <div className="input-field">
+                        <input type="number" name="matric" ref="matric" />
+                        <label htmlFor="matric">Matriculation Number</label>
+                    </div>
                     <div className="input-field">
                         <input type="text" name="firstName" ref="firstName" />
                         <label htmlFor="firstName">First Name</label>
